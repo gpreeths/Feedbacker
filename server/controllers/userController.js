@@ -1,0 +1,51 @@
+
+const User = require('../models/userModel')
+const bcrypt = require('bcrypt')
+const jwt=require('jsonwebtoken')
+// const mongoose=require('mongoose')
+// require("dotenv").config()
+
+const signup = async (req, res) => {
+    const { name, email, password } = req.body
+    try{
+        const exist = await User.findOne({ email })
+    console.log(exist);
+
+    if (exist) {
+        res.send("already exist")
+    }
+    else {
+        const hashedpassword = await bcrypt.hash(password, 10)
+        const user = new User({ name, email, password: hashedpassword })
+        user.save().then(()=> { console.log("user added to db") 
+        }
+    )
+    res.end("done")
+}
+    }
+catch(error){
+    return res.status(500).json({ message: "server error" })
+}}
+
+const login=async(req,res)=>{
+    const { name, email, password } = req.body
+    try{const exist= await User.findOne({email})
+    if(exist){
+        const passwordmatched=await bcrypt.compare(password,exist.password)
+        if(passwordmatched){
+            var token=jwt.sign({name:passwordmatched.name,id:passwordmatched.id},process.env.JWT_SECRET,{expiresIn:'1h'})
+            res.status(200).json({ message: "Login successful", token })
+        }
+        else{
+            return res.status(401).json({ message: "Password incorrect" })
+        }
+    }
+else{return res.status(404).json({ message: "User doesn't exist" })}
+}
+
+catch(error){
+    return res.status(500).json({ message: "server error" })
+}}
+    
+
+module.exports={signup,login}
