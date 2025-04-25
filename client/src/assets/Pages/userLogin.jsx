@@ -1,7 +1,8 @@
 import React from 'react'
-import { Menu3 } from '../Components/menu1'
+import {Menu3} from '../Components/menu1'
+import { Link } from 'react-router-dom'
 
-function Signup() {
+function userLogin() {
   return (
     <div>
         <Menu3/>
@@ -9,15 +10,19 @@ function Signup() {
         <form action="">
           <table>
           
-          <tr><th><label htmlFor="">Name</label></th>
-          <td><input type="text" /></td></tr>
+            
             <tr><th><label htmlFor="">Email</label></th>
             <td><input type="text" /></td></tr>
             <tr><th><label htmlFor="">Password</label></th>
             <td><input type="text" /></td></tr>
+          <br /><br />
+          <tr><th><Link to="/signup">No account? Create one!</Link> </th>
+          <td><Link to="/forgotpassword">Forgot password? No worries</Link></td></tr>
+
            
           
           </table>
+
           <input type="submit" />
           </form>
         </div>
@@ -26,4 +31,4 @@ function Signup() {
   )
 }
 
-export default Signup
+export default userLogin
