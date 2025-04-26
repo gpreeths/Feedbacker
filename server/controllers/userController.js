@@ -28,12 +28,12 @@ catch(error){
 }}
 
 const login=async(req,res)=>{
-    const { name, email, password } = req.body
+    const {email, password } = req.body
     try{const exist= await User.findOne({email})
     if(exist){
         const passwordmatched=await bcrypt.compare(password,exist.password)
         if(passwordmatched){
-            var token=jwt.sign({name:passwordmatched.name,id:passwordmatched.id},process.env.JWT_SECRET,{expiresIn:'1h'})
+            var token=jwt.sign({name:exist.name,id:exist.id},process.env.JWT_SECRET,{expiresIn:'1h'})
             res.status(200).json({ message: "Login successful", token })
         }
         else{
@@ -46,6 +46,10 @@ else{return res.status(404).json({ message: "User doesn't exist" })}
 catch(error){
     return res.status(500).json({ message: "server error" })
 }}
+
+const customerReview=async(req, res) => {
+    res.send(`Welcome ${req.user.name}`);
+  };
     
 
-module.exports={signup,login}
+module.exports={signup,login,customerReview}

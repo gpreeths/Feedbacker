@@ -15,6 +15,9 @@ mongoose.connect(process.env.MONGO_URL)
 const userRoute=require('./routes/userRoute')
 app.use('/user',userRoute)
 
+const customerReviewRoute=require('./routes/customerReviewRoute')
+app.use('/customerReview',customerReviewRoute)
+
 app.listen(process.env.PORT,()=>{
     console.log(`running on ${process.env.PORT}`);
     
