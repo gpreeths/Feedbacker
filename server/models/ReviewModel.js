@@ -1,6 +1,6 @@
 const mongoose=require('mongoose')
 
-const customerReviewSchema= new mongoose.Schema({
+const ReviewSchema= new mongoose.Schema({
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',
@@ -23,8 +23,17 @@ rating:{
 createdAt: {
     type: Date,
     default: Date.now
-}
+},
+//admin reply
+replies:[{
+    
+    reviewReply:{
+        type:String,
+    required:true
+    }
+
+}]
 
 })
 
-module.exports =mongoose.model('CustomerReview',customerReviewSchema)
+module.exports =mongoose.model('CustomerReview',ReviewSchema)

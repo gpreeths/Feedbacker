@@ -18,6 +18,9 @@ app.use('/user',userRoute)
 const customerReviewRoute=require('./routes/customerReviewRoute')
 app.use('/customerReview',customerReviewRoute)
 
+const adminRoute=require('./routes/adminRoute')
+app.use('/admin',adminRoute)
+
 app.listen(process.env.PORT,()=>{
     console.log(`running on ${process.env.PORT}`);
     
