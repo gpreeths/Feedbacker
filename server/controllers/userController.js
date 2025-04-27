@@ -17,10 +17,10 @@ const signup = async (req, res) => {
     else {
         const hashedpassword = await bcrypt.hash(password, 10)
         const user = new User({ name, email, password: hashedpassword })
-        user.save().then(()=> { console.log("user added to db") 
+        await user.save().then(()=> { console.log("user added to db") 
         }
     )
-    res.end("done")
+    res.status(201).json({ message: "Signup successful" });
 }
     }
 catch(error){
@@ -29,6 +29,8 @@ catch(error){
 
 const login=async(req,res)=>{
     const {email, password } = req.body
+    console.log(email,password);
+    
     try{const exist= await User.findOne({email})
     if(exist){
         const passwordmatched=await bcrypt.compare(password,exist.password)
