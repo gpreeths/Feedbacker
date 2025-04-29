@@ -57,7 +57,7 @@ function Menu3() {
 function Menu4() {
   return (
     <div className="menu4Container">
-      <div className='user'>Preethika</div>
+      <div className='user'>Welcome back, how was MOKA today?</div>
       <Link to='/'>
         <img src={logo} alt='logo' className='logo4iconMenu' />
       </Link>
@@ -66,7 +66,7 @@ function Menu4() {
 
         <li><Link to='/about'>Previous reviwes</Link></li>
         <li><Link to='/contact'>Contact Us</Link></li>
-       < li><Link to='/branches'>Logout</Link></li>
+       < li><Link to='/'>Logout</Link></li>
 
       </ul>
     </div>
@@ -81,8 +81,8 @@ function Menu5() {
         <img src={logo} alt='logo' className='logo4iconMenu' />
       </Link>
       <ul className='menu4List'>
-        <li><Link to='/home'>Home</Link></li>
-       < li><Link to='/branches'>Logout</Link></li>
+        <li><Link to='/'>Home</Link></li>
+       < li><Link to='/'>Logout</Link></li>
 
       </ul>
     </div>

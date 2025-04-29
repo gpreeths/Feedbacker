@@ -81,21 +81,36 @@ const totAvg=async(req,res)=>{
         }
 }
 
-const sort=async(req,res)=>{
+const sort = async (req, res) => {
     try {
-        const reviews=await customerReview.find()
-        .sort({ rating: 1 }) // Sort by highest rating
-        .populate('userId', 'name email')
-        .limit(10);  // Optional: Limit number of reviews shown
+        const { sortBy = 'rating', order = 'asc' } = req.query; // Get sortBy and order from query params
 
-    res.status(200).json({
-       reviews
-    });
-    }
-    catch (error) {
+        // Validate the sortBy field
+        const validSortFields = ['rating', 'createdAt'];
+        if (!validSortFields.includes(sortBy)) {
+            return res.status(400).json({ message: 'Invalid sort field. Use "rating" or "createdAt".' });
+        }
+
+        // Validate the order
+        const validOrders = ['asc', 'desc'];
+        if (!validOrders.includes(order)) {
+            return res.status(400).json({ message: 'Invalid sort order. Use "asc" or "desc".' });
+        }
+
+        // Create sorting object dynamically based on the query params
+        const sortObject = {};
+        sortObject[sortBy] = order === 'asc' ? 1 : -1; // Ascending or descending order
+
+        const reviews = await customerReview.find()
+            .populate('userId', 'name email')
+            .sort(sortObject); // Apply dynamic sorting
+
+        res.status(200).json({ reviews });
+    } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error" });
     }
 }
+
 
 module.exports = { login, view,reply,totAvg,sort }

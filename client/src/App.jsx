@@ -6,9 +6,10 @@ import Userlogin from './assets/Pages/userLogin'
 import AdminLogin from './assets/Pages/adminLogin'
 import AdminReview from './assets/Pages/adminReview'
 import { Routes,Route } from 'react-router-dom'
-import CustomerReview from './assets/Pages/customerReview'
+import CustomerReview from './assets/Pages/CustomerReview'
 import './style.css'
 function App() {
+
   return (
     
       <Routes>

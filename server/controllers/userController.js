@@ -1,57 +1,73 @@
+const User = require('../models/userModel');
+const customerReview = require('../models/ReviewModel');   // 👈 Add this
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-const User = require('../models/userModel')
-const bcrypt = require('bcrypt')
-const jwt=require('jsonwebtoken')
-// const mongoose=require('mongoose')
-// require("dotenv").config()
-
+// USER SIGNUP
 const signup = async (req, res) => {
-    const { name, email, password } = req.body
-    try{
-        const exist = await User.findOne({ email })
-    console.log(exist);
-
+  const { name, email, password } = req.body;
+  try {
+    const exist = await User.findOne({ email });
     if (exist) {
-        res.send("already exist")
+      return res.status(400).json({ message: "User already exists" });
     }
-    else {
-        const hashedpassword = await bcrypt.hash(password, 10)
-        const user = new User({ name, email, password: hashedpassword })
-        await user.save().then(()=> { console.log("user added to db") 
-        }
-    )
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ name, email, password: hashedPassword });
+    await user.save();
+
     res.status(201).json({ message: "Signup successful" });
-}
+  } catch (error) {
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// USER LOGIN
+const login = async (req, res) => {
+  const { email, password } = req.body;
+  console.log(email, password);
+
+  try {
+    const exist = await User.findOne({ email });
+    if (!exist) {
+      return res.status(404).json({ message: "User doesn't exist" });
     }
-catch(error){
-    return res.status(500).json({ message: "server error" })
-}}
 
-const login=async(req,res)=>{
-    const {email, password } = req.body
-    console.log(email,password);
-    
-    try{const exist= await User.findOne({email})
-    if(exist){
-        const passwordmatched=await bcrypt.compare(password,exist.password)
-        if(passwordmatched){
-            var token=jwt.sign({name:exist.name,id:exist.id},process.env.JWT_SECRET,{expiresIn:'1h'})
-            res.status(200).json({ message: "Login successful", token })
-        }
-        else{
-            return res.status(401).json({ message: "Password incorrect" })
-        }
+    const passwordMatched = await bcrypt.compare(password, exist.password);
+    if (!passwordMatched) {
+      return res.status(401).json({ message: "Password incorrect" });
     }
-else{return res.status(404).json({ message: "User doesn't exist" })}
-}
 
-catch(error){
-    return res.status(500).json({ message: "server error" })
-}}
+    const token = jwt.sign(
+      { name: exist.name, id: exist._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
 
-const customerReview=async(req, res) => {
-    res.send(`Welcome ${req.user.name}`);
-  };
-    
+    res.status(200).json({ message: "Login successful", token });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error" });
+  }
+};
 
-module.exports={signup,login,customerReview}
+// CREATE CUSTOMER REVIEW
+const createReview = async (req, res) => {
+  try {
+    const { reviewTitle, reviewMessage, rating } = req.body;
+
+    const newReview = new customerReview({
+      userId: req.user.id, // 👈 from token
+      reviewTitle,
+      reviewMessage,
+      rating
+    });
+
+    await newReview.save();
+
+    res.status(201).json({ message: "Review added successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to submit review", error: error.message });
+  }
+};
+
+module.exports = { signup, login, createReview };

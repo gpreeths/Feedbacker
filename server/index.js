@@ -15,8 +15,6 @@ mongoose.connect(process.env.MONGO_URL)
 const userRoute=require('./routes/userRoute')
 app.use('/user',userRoute)
 
-const customerReviewRoute=require('./routes/customerReviewRoute')
-app.use('/customerReview',customerReviewRoute)
 
 const adminRoute=require('./routes/adminRoute')
 app.use('/admin',adminRoute)
